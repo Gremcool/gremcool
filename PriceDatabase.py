@@ -9,7 +9,7 @@ import random
 # Authenticate and initialize Google Drive API
 def get_drive_service():
     SCOPES = ['https://www.googleapis.com/auth/drive']
-    credentials = Credentials.from_service_account_file("path_to_your_service_account.json", scopes=SCOPES)
+    credentials = Credentials.from_service_account_file("https://drive.google.com/drive/folders/1KrtL97S-1r9CaW_tGGS1TQfb--saUF49.json", scopes=SCOPES)
     return build("drive", "v3", credentials=credentials)
 
 # Fetch Excel files from a specific Google Drive folder
@@ -69,7 +69,7 @@ def main():
 
     # Load files into session state if not already loaded
     if "uploaded_files" not in st.session_state:
-        folder_id = "your_google_drive_folder_id"  # Replace with your folder ID
+        folder_id = "https://drive.google.com/drive/folders/1BdP7eq7PA_iGMZRPZpwINbMJeSOT2Tj9"  # Replace with your folder ID
         st.session_state.uploaded_files = fetch_excel_files_from_drive(folder_id)
 
     # Predictive search bar
