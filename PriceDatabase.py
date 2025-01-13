@@ -5,15 +5,16 @@ import requests
 from io import BytesIO
 
 # GitHub repository URL where Excel files are stored
-GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/your_username/your_repo_name/main/excel_files"
+GITHUB_REPO_URL = "https://github.com/Gremcool/gremcool/tree/main/excel_files"
+
+# Raw GitHub content base URL
+GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/Gremcool/gremcool/main/excel_files"
 
 # List of filenames to load from the GitHub repository
 EXCEL_FILE_NAMES = [
-    "file1.xlsx",
-    "file2.xlsx",
-    "file3.xlsx",  # Add all your file names here
-]
-
+    "FINAL MASTER LIST AS OF 24 JULY 2024.xlsx",
+    "First Draft PriceList.xlsx",
+    "SA Price List.xlsx",  # Add all your file names here
 # Function to fetch Excel files from GitHub
 def load_files_from_github():
     files = {}
@@ -56,14 +57,14 @@ def search_across_files(query, files):
 
 # Main function for the app
 def main():
-    st.title("Excel File Viewer and Search")
+    st.title("RMS Price List")
 
     # Load files from GitHub
     st.write("Loading files from GitHub...")
     uploaded_files = load_files_from_github()
 
     # Predictive search bar
-    search_query = st.text_input("Enter your search query:")
+    search_query = st.text_input("Enter product you want to search:")
     if st.button("Clear Search"):
         search_query = ""
 
