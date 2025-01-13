@@ -15,6 +15,7 @@ EXCEL_FILE_NAMES = [
     "FINAL MASTER LIST AS OF 24 JULY 2024.xlsx",
     "First Draft PriceList.xlsx",
     "SA Price List.xlsx",  # Add all your file names here
+]
 # Function to fetch Excel files from GitHub
 def load_files_from_github():
     files = {}
