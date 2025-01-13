@@ -7,7 +7,7 @@ from io import BytesIO
 # GitHub repository configuration
 GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/Gremcool/gremcool/main"
 EXCEL_FILES_PATH = "excel_files"
-LOGO_PATH = "assets/logo.png"  # Adjust this to your logo's path in the repository
+LOGO_PATH = "assets/logo.jpg"  # Default logo path as .png
 
 # List of filenames to load from the GitHub repository
 EXCEL_FILE_NAMES = [
@@ -16,17 +16,15 @@ EXCEL_FILE_NAMES = [
     "SA Price List.xlsx",  # Add all your file names here
 ]
 
-# Custom CSS for page layout and styling
+# Custom CSS for full-width layout
 st.markdown(
     """
     <style>
-    /* Remove extra margins around the main container */
     .main .block-container {
+        max-width: 95%;
         padding: 0;
-        margin: 0;
-        max-width: 90%;
+        margin: 0 auto;
     }
-    /* Center and style the header banner */
     .header-banner {
         background-color: #004080;
         color: white;
@@ -36,7 +34,6 @@ st.markdown(
         font-size: 24px;
         font-weight: bold;
     }
-    /* Adjust table styling */
     .dataframe {
         width: 100% !important;
         text-align: left;
@@ -61,13 +58,21 @@ def load_files_from_github():
 
 # Function to fetch logo from GitHub
 def load_logo_from_github():
-    logo_url = f"{GITHUB_RAW_BASE_URL}/{LOGO_PATH}"
-    response = requests.get(logo_url)
+    jpg_url = f"{GITHUB_RAW_BASE_URL}/{LOGO_PATH.replace('.png', '.jpg')}"  # Path for .jpg file
+    png_url = f"{GITHUB_RAW_BASE_URL}/{LOGO_PATH}"  # Path for .png file
+
+    # First, try loading the .jpg file
+    response = requests.get(jpg_url)
     if response.status_code == 200:
         return BytesIO(response.content)
-    else:
-        st.warning("Failed to load the logo from GitHub.")
-        return None
+
+    # Fallback to .png if .jpg fails
+    response = requests.get(png_url)
+    if response.status_code == 200:
+        return BytesIO(response.content)
+
+    st.warning("Failed to load the logo from GitHub.")
+    return None
 
 # Function to style DataFrame and highlight matches
 def highlight_matches(data, query):
@@ -134,3 +139,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
