@@ -25,26 +25,22 @@ st.markdown(
         padding: 0;
         margin: 0 auto;
     }
-    .header {
+    .header-banner {
         display: flex;
         align-items: center;
+        justify-content: flex-start;
         background-color: #004080;
+        color: white;
         padding: 10px 20px;
         border-radius: 5px;
     }
-    .header img {
-        width: 70px; /* Logo size */
-        margin-right: 20px;
+    .header-banner img {
+        width: 60px; /* Logo size */
+        margin-right: 20px; /* Space between logo and text */
     }
-    .header .header-text {
-        color: white;
+    .header-banner .header-text {
         font-size: 24px;
         font-weight: bold;
-        flex-grow: 1;
-    }
-    .dataframe {
-        width: 100% !important;
-        text-align: left;
     }
     </style>
     """,
@@ -114,9 +110,9 @@ def main():
     logo = load_logo_from_github()
 
     # Display header banner with RMS logo and text
-    st.markdown('<div class="header">', unsafe_allow_html=True)
+    st.markdown('<div class="header-banner">', unsafe_allow_html=True)
     if logo:
-        st.image(logo, width=70)  # Adjusted logo size
+        st.image(logo, width=60, use_column_width=False)  # Logo size
     st.markdown('<span class="header-text">RMS Data Explorer</span>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
