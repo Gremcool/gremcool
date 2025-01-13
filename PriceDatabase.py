@@ -7,7 +7,7 @@ from io import BytesIO
 # GitHub repository configuration
 GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/Gremcool/gremcool/main"
 EXCEL_FILES_PATH = "excel_files"
-LOGO_PATH = "assets/logo.jpg"  # Default logo path as .png
+LOGO_PATH = "assets/logo.jpg"  # Default logo path as .jpg
 
 # List of filenames to load from the GitHub repository
 EXCEL_FILE_NAMES = [
@@ -16,7 +16,7 @@ EXCEL_FILE_NAMES = [
     "SA Price List.xlsx",  # Add all your file names here
 ]
 
-# Custom CSS for layout adjustments
+# Custom CSS for full-width layout
 st.markdown(
     """
     <style>
@@ -31,16 +31,20 @@ st.markdown(
         justify-content: flex-start;
         background-color: #004080;
         color: white;
-        padding: 10px 20px;
+        padding: 10px;
         border-radius: 5px;
     }
     .header-banner img {
-        width: 60px; /* Logo size */
-        margin-right: 20px; /* Space between logo and text */
+        width: 50px;
+        margin-right: 15px;
     }
-    .header-banner .header-text {
+    .header-text {
         font-size: 24px;
         font-weight: bold;
+    }
+    .dataframe {
+        width: 100% !important;
+        text-align: left;
     }
     </style>
     """,
@@ -112,7 +116,7 @@ def main():
     # Display header banner with RMS logo and text
     st.markdown('<div class="header-banner">', unsafe_allow_html=True)
     if logo:
-        st.image(logo, width=60, use_column_width=False)  # Logo size
+        st.image(logo, use_container_width=False)  # Updated parameter
     st.markdown('<span class="header-text">RMS Data Explorer</span>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
