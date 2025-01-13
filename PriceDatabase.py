@@ -5,10 +5,10 @@ import requests
 from io import BytesIO
 
 # GitHub repository URL where Excel files are stored
-GITHUB_REPO_URL = "https://github.com/Gremcool/Gremcool/tree/main/excel_files"
+GITHUB_REPO_URL = "https://github.com/Gremcool/gremcool/tree/main/excel_files"
 
 # Raw GitHub content base URL
-GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/your_username/your_repo_name/main/excel_files"
+GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/Gremcool/gremcool/main/excel_files"
 
 # List of filenames to load from the GitHub repository
 EXCEL_FILE_NAMES = [
