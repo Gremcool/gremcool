@@ -4,11 +4,10 @@ import random
 import requests
 from io import BytesIO
 
-# GitHub repository URL where Excel files are stored
-GITHUB_REPO_URL = "https://github.com/Gremcool/gremcool/tree/main/excel_files"
-
-# Raw GitHub content base URL
-GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/Gremcool/gremcool/main/excel_files"
+# GitHub repository configuration
+GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/Gremcool/gremcool/main"
+EXCEL_FILES_PATH = "excel_files"
+LOGO_PATH = "assets/logo.png"  # Adjust this to your logo's path in the repository
 
 # List of filenames to load from the GitHub repository
 EXCEL_FILE_NAMES = [
@@ -16,11 +15,42 @@ EXCEL_FILE_NAMES = [
     "First Draft PriceList.xlsx",
     "SA Price List.xlsx",  # Add all your file names here
 ]
-# Function to fetch Excel files from GitHub
+
+# Custom CSS for page layout and styling
+st.markdown(
+    """
+    <style>
+    /* Remove extra margins around the main container */
+    .main .block-container {
+        padding: 0;
+        margin: 0;
+        max-width: 90%;
+    }
+    /* Center and style the header banner */
+    .header-banner {
+        background-color: #004080;
+        color: white;
+        text-align: center;
+        padding: 20px 0;
+        border-radius: 5px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    /* Adjust table styling */
+    .dataframe {
+        width: 100% !important;
+        text-align: left;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+# Function to fetch files from GitHub
 def load_files_from_github():
     files = {}
     for file_name in EXCEL_FILE_NAMES:
-        file_url = f"{GITHUB_RAW_BASE_URL}/{file_name}"
+        file_url = f"{GITHUB_RAW_BASE_URL}/{EXCEL_FILES_PATH}/{file_name}"
         response = requests.get(file_url)
         if response.status_code == 200:
             file_data = pd.read_excel(BytesIO(response.content))
@@ -28,6 +58,16 @@ def load_files_from_github():
         else:
             st.warning(f"Failed to load {file_name} from GitHub. Please check the URL.")
     return files
+
+# Function to fetch logo from GitHub
+def load_logo_from_github():
+    logo_url = f"{GITHUB_RAW_BASE_URL}/{LOGO_PATH}"
+    response = requests.get(logo_url)
+    if response.status_code == 200:
+        return BytesIO(response.content)
+    else:
+        st.warning("Failed to load the logo from GitHub.")
+        return None
 
 # Function to style DataFrame and highlight matches
 def highlight_matches(data, query):
@@ -40,7 +80,6 @@ def highlight_matches(data, query):
                 "props": [
                     ("background-color", "black"),
                     ("color", "white"),
-                    ("font-weight", "bold"),
                     ("text-align", "center"),
                 ],
             }
@@ -58,14 +97,20 @@ def search_across_files(query, files):
 
 # Main function for the app
 def main():
-    st.title("RMS Price List")
+    # Load the logo
+    logo = load_logo_from_github()
+
+    # Display header banner with RMS logo
+    st.markdown('<div class="header-banner">RMS Data Explorer</div>', unsafe_allow_html=True)
+    if logo:
+        st.image(logo, width=150, use_column_width=False)
 
     # Load files from GitHub
-    # st.write("Loading files from GitHub...")
+    st.write("Loading files from GitHub...")
     uploaded_files = load_files_from_github()
 
     # Predictive search bar
-    search_query = st.text_input("Enter product you want to search:")
+    search_query = st.text_input("Enter your search query:")
     if st.button("Clear Search"):
         search_query = ""
 
