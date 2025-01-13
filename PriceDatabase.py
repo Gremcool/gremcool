@@ -61,7 +61,7 @@ def main():
     st.title("RMS Price List")
 
     # Load files from GitHub
-    st.write("Loading files from GitHub...")
+    # st.write("Loading files from GitHub...")
     uploaded_files = load_files_from_github()
 
     # Predictive search bar
