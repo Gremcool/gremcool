@@ -59,7 +59,7 @@ def search_across_files(query, files):
 
 # Main function for the app
 def main():
-    st.title("Excel File Viewer and Search")
+    st.title("RMS Price List and Search")
     st.sidebar.header("Controls")
 
     # Load files from GitHub
