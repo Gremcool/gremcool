@@ -9,8 +9,11 @@ import random
 # Authenticate and initialize Google Drive API
 def get_drive_service():
     SCOPES = ['https://www.googleapis.com/auth/drive']
-    credentials = Credentials.from_service_account_file("https://drive.google.com/drive/folders/1KrtL97S-1r9CaW_tGGS1TQfb--saUF49.json", scopes=SCOPES)
+    credentials = Credentials.from_service_account_file("metaj.json", scopes=SCOPES)
     return build("drive", "v3", credentials=credentials)
+
+# Google Drive folder ID
+folder_id = "1KrtL97S-1r9CaW_tGGS1TQfb--saUF49"
 
 # Fetch Excel files from a specific Google Drive folder
 def fetch_excel_files_from_drive(folder_id):
