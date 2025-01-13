@@ -16,7 +16,7 @@ EXCEL_FILE_NAMES = [
     "SA Price List.xlsx",  # Add all your file names here
 ]
 
-# Custom CSS for full-width layout
+# Custom CSS for layout adjustments
 st.markdown(
     """
     <style>
@@ -25,21 +25,22 @@ st.markdown(
         padding: 0;
         margin: 0 auto;
     }
-    .header-banner {
-        background-color: #004080;
-        color: white;
-        text-align: center;
-        padding: 20px 0;
-        border-radius: 5px;
-        font-size: 24px;
-        font-weight: bold;
+    .header {
         display: flex;
         align-items: center;
-        justify-content: flex-start;
+        background-color: #004080;
+        padding: 10px 20px;
+        border-radius: 5px;
     }
-    .header-banner img {
-        width: 50px;  /* Reduced logo size */
-        margin-right: 15px;  /* Space between logo and banner text */
+    .header img {
+        width: 70px; /* Logo size */
+        margin-right: 20px;
+    }
+    .header .header-text {
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        flex-grow: 1;
     }
     .dataframe {
         width: 100% !important;
@@ -112,15 +113,15 @@ def main():
     # Load the logo
     logo = load_logo_from_github()
 
-    # Display header banner with RMS logo (positioned left)
-    st.markdown('<div class="header-banner">', unsafe_allow_html=True)
+    # Display header banner with RMS logo and text
+    st.markdown('<div class="header">', unsafe_allow_html=True)
     if logo:
-        st.image(logo, width=50)  # Reduced logo size
-    st.markdown('<span style="font-size: 24px; color: white; font-weight: bold;">RMS Data Explorer</span>', unsafe_allow_html=True)
+        st.image(logo, width=70)  # Adjusted logo size
+    st.markdown('<span class="header-text">RMS Data Explorer</span>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     # Load files from GitHub
-    # st.write("Loading files from GitHub...")
+    st.write("Loading files from GitHub...")
     uploaded_files = load_files_from_github()
 
     # Predictive search bar
