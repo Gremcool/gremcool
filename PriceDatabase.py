@@ -33,6 +33,13 @@ st.markdown(
         border-radius: 5px;
         font-size: 24px;
         font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    .header-banner img {
+        width: 50px;  /* Reduced logo size */
+        margin-right: 15px;  /* Space between logo and banner text */
     }
     .dataframe {
         width: 100% !important;
@@ -105,10 +112,12 @@ def main():
     # Load the logo
     logo = load_logo_from_github()
 
-    # Display header banner with RMS logo
-    st.markdown('<div class="header-banner">RMS Data Explorer</div>', unsafe_allow_html=True)
+    # Display header banner with RMS logo (positioned left)
+    st.markdown('<div class="header-banner">', unsafe_allow_html=True)
     if logo:
-        st.image(logo, width=150, use_column_width=False)
+        st.image(logo, width=50)  # Reduced logo size
+    st.markdown('<span style="font-size: 24px; color: white; font-weight: bold;">RMS Data Explorer</span>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # Load files from GitHub
     st.write("Loading files from GitHub...")
@@ -139,4 +148,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
