@@ -120,7 +120,7 @@ def main():
     st.markdown('</div>', unsafe_allow_html=True)
 
     # Load files from GitHub
-    st.write("Loading files from GitHub...")
+    # st.write("Loading files from GitHub...")
     uploaded_files = load_files_from_github()
 
     # Predictive search bar
