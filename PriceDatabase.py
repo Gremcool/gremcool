@@ -1,45 +1,37 @@
 import streamlit as st
 import pandas as pd
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseDownload
-from google.oauth2.service_account import Credentials
-import io
 import random
+import requests
+from io import BytesIO
 
-# Authenticate and initialize Google Drive API
-def get_drive_service():
-    SCOPES = ['https://www.googleapis.com/auth/drive']
-    credentials = Credentials.from_service_account_file("metaj.json", scopes=SCOPES)
-    return build("drive", "v3", credentials=credentials)
+# GitHub repository URL where Excel files are stored
+GITHUB_REPO_URL = "https://github.com/Gremcool/Gremcool/tree/main/excel_files"
 
-# Google Drive folder ID
-folder_id = "1KrtL97S-1r9CaW_tGGS1TQfb--saUF49"
+# Raw GitHub content base URL
+GITHUB_RAW_BASE_URL = "https://raw.githubusercontent.com/your_username/your_repo_name/main/excel_files"
 
-# Fetch Excel files from a specific Google Drive folder
-def fetch_excel_files_from_drive(folder_id):
-    service = get_drive_service()
-    results = service.files().list(
-        q=f"'{folder_id}' in parents and mimeType='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'",
-        fields="files(id, name)"
-    ).execute()
-    files = results.get("files", [])
-    excel_files = {}
-    
-    for file in files:
-        request = service.files().get_media(fileId=file["id"])
-        file_stream = io.BytesIO()
-        downloader = MediaIoBaseDownload(file_stream, request)
-        done = False
-        while not done:
-            status, done = downloader.next_chunk()
-        file_stream.seek(0)
-        excel_files[file["name"]] = pd.read_excel(file_stream)
-    
-    return excel_files
+# List of filenames to load from the GitHub repository
+EXCEL_FILE_NAMES = [
+    "FINAL MASTER LIST AS OF 24 JULY 2024.xlsx",
+    "First Draft PriceList.xlsx",
+    "SA Price List.xlsx",  # Add all your file names here
+]
+
+# Function to fetch Excel files from GitHub
+def load_files_from_github():
+    files = {}
+    for file_name in EXCEL_FILE_NAMES:
+        file_url = f"{GITHUB_RAW_BASE_URL}/{file_name}"
+        response = requests.get(file_url)
+        if response.status_code == 200:
+            file_data = pd.read_excel(BytesIO(response.content))
+            files[file_name.split(".")[0]] = file_data
+        else:
+            st.warning(f"Failed to load {file_name} from GitHub. Please check the URL.")
+    return files
 
 # Function to style DataFrame and highlight matches
 def highlight_matches(data, query):
-    """Highlight cells containing the search query in yellow."""
     return data.style.applymap(
         lambda val: "background-color: yellow" if query.lower() in str(val).lower() else ""
     ).set_table_styles(
@@ -58,7 +50,6 @@ def highlight_matches(data, query):
 
 # Function to search across files and highlight results
 def search_across_files(query, files):
-    """Search for the query in all uploaded files and return highlighted results."""
     result = {}
     for file_name, data in files.items():
         matches = data[data.apply(lambda row: row.astype(str).str.contains(query, case=False, na=False).any(), axis=1)]
@@ -66,41 +57,37 @@ def search_across_files(query, files):
             result[file_name] = highlight_matches(matches, query)
     return result
 
-# Main function to display the app
+# Main function for the app
 def main():
-    st.title("Search Price Lists")
+    st.title("Excel File Viewer and Search")
+    st.sidebar.header("Controls")
 
-    # Load files into session state if not already loaded
-    if "uploaded_files" not in st.session_state:
-        folder_id = "https://drive.google.com/drive/folders/1BdP7eq7PA_iGMZRPZpwINbMJeSOT2Tj9"  # Replace with your folder ID
-        st.session_state.uploaded_files = fetch_excel_files_from_drive(folder_id)
+    # Load files from GitHub
+    st.sidebar.write("Loading files from GitHub...")
+    uploaded_files = load_files_from_github()
 
     # Predictive search bar
-    search_query = st.text_input("Enter your search query:", key="search")
-    st.session_state.search_query = search_query
-
-    # Clear search button
+    search_query = st.text_input("Enter your search query:")
     if st.button("Clear Search"):
-        st.session_state.search_query = ""
+        search_query = ""
 
-    # Display search results or uploaded files
-    if st.session_state.search_query:
-        st.markdown("### Search Results")
-        search_results = search_across_files(st.session_state.search_query, st.session_state.uploaded_files)
+    # Display search results or all files
+    if search_query:
+        st.header("Search Results")
+        search_results = search_across_files(search_query, uploaded_files)
         if search_results:
             for file_name, styled_data in search_results.items():
                 title_bg_color = "#{:02x}{:02x}{:02x}".format(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-                st.markdown(f"<div style='background-color: {title_bg_color}; padding: 10px; color: white;'>{file_name}</div>", unsafe_allow_html=True)
+                st.markdown(f"<div style='background-color: {title_bg_color}; padding: 10px; border-radius: 5px; color: white;'>{file_name}</div>", unsafe_allow_html=True)
                 st.write(styled_data)
         else:
-            st.write("No matches found across the uploaded files.")
+            st.write("No matches found.")
     else:
-        if st.session_state.uploaded_files:
-            for file_name, data in st.session_state.uploaded_files.items():
-                title_bg_color = "#{:02x}{:02x}{:02x}".format(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-                st.markdown(f"<div style='background-color: {title_bg_color}; padding: 10px; color: white;'>{file_name}</div>", unsafe_allow_html=True)
-                st.write(data.head())  # Show preview of the uploaded files
+        st.header("All Files")
+        for file_name, data in uploaded_files.items():
+            title_bg_color = "#{:02x}{:02x}{:02x}".format(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            st.markdown(f"<div style='background-color: {title_bg_color}; padding: 10px; border-radius: 5px; color: white;'>{file_name}</div>", unsafe_allow_html=True)
+            st.write(data.head())  # Show preview of the data
 
-# Run the app
 if __name__ == "__main__":
     main()
