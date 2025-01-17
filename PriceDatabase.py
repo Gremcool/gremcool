@@ -62,12 +62,25 @@ def main():
     # Add a header banner
     st.markdown(
         """
-        <div style='background-color: #4CAF50; padding: 20px; border-radius: 5px; text-align: center; color: white; font-size: 24px;'>
+        <style>
+            .header-banner {
+                background-color: #4CAF50;
+                padding: 20px;
+                border-radius: 5px;
+                text-align: center;
+                color: white;
+                font-size: 24px;
+            }
+        </style>
+        <div class="header-banner">
             Welcome to the RMS Price List Viewer!
         </div>
         """,
         unsafe_allow_html=True
     )
+
+    # Add fallback header for environments where HTML might not render
+    st.header("Welcome to the RMS Price List Viewer!")
 
     st.title("RMS Price List")
 
