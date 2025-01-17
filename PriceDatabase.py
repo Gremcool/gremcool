@@ -82,7 +82,7 @@ def main():
     # Add fallback header for environments where HTML might not render
     st.header("Welcome to the RMS Price List Viewer!")
 
-    st.title("RMS Price List")
+    st.title("RMS Price Database")
 
     # Load files from GitHub
     uploaded_files = load_files_from_github()
