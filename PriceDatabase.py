@@ -16,6 +16,7 @@ EXCEL_FILE_NAMES = [
     "First Draft PriceList.xlsx",
     "SA Price List.xlsx",  # Add all your file names here
 ]
+
 # Function to fetch Excel files from GitHub
 def load_files_from_github():
     files = {}
@@ -58,10 +59,19 @@ def search_across_files(query, files):
 
 # Main function for the app
 def main():
+    # Add a header banner
+    st.markdown(
+        """
+        <div style='background-color: #4CAF50; padding: 20px; border-radius: 5px; text-align: center; color: white; font-size: 24px;'>
+            Welcome to the RMS Price List Viewer!
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     st.title("RMS Price List")
 
     # Load files from GitHub
-    # st.write("Loading files from GitHub...")
     uploaded_files = load_files_from_github()
 
     # Predictive search bar
